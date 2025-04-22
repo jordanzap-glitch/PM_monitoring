@@ -27,34 +27,34 @@
             text-align: center;
         }
 
-            .container img {
-                max-width: 120px;
-                margin-bottom: 20px;
-            }
+        .container img {
+            max-width: 120px;
+            margin-bottom: 20px;
+        }
 
-            .container h1 {
-                color: #2e7d32;
-                font-size: 24px;
-                margin-bottom: 20px;
-            }
+        .container h1 {
+            color: #2e7d32;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
 
         .input-group {
             margin-bottom: 20px;
         }
 
-            .input-group input {
-                width: 100%;
-                padding: 12px;
-                border: 1px solid #ddd;
-                border-radius: 6px;
-                font-size: 16px;
-            }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
 
-                .input-group input:focus {
-                    border-color: #2e7d32;
-                    outline: none;
-                    box-shadow: 0 0 8px rgba(46, 125, 50, 0.3);
-                }
+        .input-group input:focus {
+            border-color: #2e7d32;
+            outline: none;
+            box-shadow: 0 0 8px rgba(46, 125, 50, 0.3);
+        }
 
         .btn {
             width: 100%;
@@ -69,9 +69,9 @@
             transition: background-color 0.3s ease;
         }
 
-            .btn:hover {
-                background-color: #1b5e20;
-            }
+        .btn:hover {
+            background-color: #1b5e20;
+        }
 
         .configure-btn {
             background-color: #388e3c;
@@ -127,8 +127,13 @@
                 const result = await response.text();
 
                 if (response.ok) {
+                    // Assuming the server returns a message like "Login successful. Welcome, John!"
                     if (result.includes("successful")) {
+                        // Extract the user's first name from the result
+                        const UserFirstName = result.split(", ")[1]; // Assuming the format is "Login successful. Welcome, John!"
                         alert(result);
+                        // Optionally, you can store the user's first name in session storage or local storage
+                        sessionStorage.setItem('UserFirstName', UserFirstName);
                         window.location.href = 'dashboard.php';
                     } else {
                         alert(result);

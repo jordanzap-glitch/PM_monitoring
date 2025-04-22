@@ -1,11 +1,35 @@
 <?php
+error_reporting(E_ALL);
+include '../db_connection.php';
+include 'includes/session.php';
 // Start the session
-include 'db_connection.php';
+
 // Check if the user is logged in
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Redirect to login page if not logged in
+if (!isset($_SESSION['userFirstName']) || !isset($_SESSION['userLastName'])) {
+    // Redirect to login page or show an error
+    header("Location: login.php");
     exit();
 }
+
+// Get the user's first name and last name from the session
+$first_name = $_SESSION['userFirstName'];
+$last_name = $_SESSION['userLastName'];
+
+// Query to get the plants for the specific user
+$query = "SELECT PLANT_NAME FROM TBL_PLANT_INFO WHERE SPONSOR_FIRST_NAME = ? AND SPONSOR_LAST_NAME = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ss", $first_name, $last_name);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Fetch the plant data
+$plants = [];
+while ($row = $result->fetch_assoc()) {
+    $plants[] = $row['PLANT_NAME'];
+}
+
+$stmt->close();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -136,13 +160,13 @@ if (!isset($_SESSION['username'])) {
 </head>
 
 <body>
-
+<?php include 'includes/header.php'; ?>
     <div class="container">
         <div class="header">
             <h1>List of Trees</h1>
-            <button class="logout-btn" onclick="logout()">
-                <img src="Resources/logout.png" alt="Logout">
-            </button>
+            <a href="../dashboard.php" class="logout-btn">
+                <img src="../Resources/logout.png" alt="Logout">
+            </a>
         </div>
 
         <div class="search-container">
@@ -158,13 +182,34 @@ if (!isset($_SESSION['username'])) {
                 </tr>
             </thead>
             <tbody>
-                <!-- Plant data will be dynamically inserted here -->
+                <?php foreach ($plants as $plant): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($plant); ?></td>
+                    <td><button class="view-btn" onclick="viewPlant('<?php echo htmlspecialchars($plant); ?>')">View</button></td>
+                </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
 
         <div class="survival-rate" id="survivalRate">
-
+            <!-- Survival rate information can be displayed here -->
         </div>
     </div>
 
-    <script
+    <script>
+        function searchBySponsor() {
+            const input = document.getElementById('searchSponsor').value.toLowerCase();
+            const rows = document.querySelectorAll('#plantTable tbody tr');
+            rows.forEach(row => {
+                const treeName = row.cells[0].textContent.toLowerCase();
+                row.style.display = treeName.includes(input) ? '' : 'none';
+            });
+        }
+
+        function viewPlant(plantName) {
+            // Implement the logic to view the plant details
+            alert('Viewing details for: ' + plantName);
+        }
+    </script>
+</body>
+</html>

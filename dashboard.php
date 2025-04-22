@@ -1,7 +1,22 @@
 <?php
 include 'db_connection.php';
 include 'includes/session.php';
+// Start the session
+
 // Check if the user is logged in
+// Get the user's first name and last name from the session
+$first_name = $_SESSION['userFirstName'];
+$last_name = $_SESSION['userLastName'];
+
+// Query to count the number of plants for the specific user
+$query = "SELECT COUNT(*) as plant_count FROM TBL_PLANT_INFO WHERE SPONSOR_FIRST_NAME = ? AND SPONSOR_LAST_NAME = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ss", $first_name, $last_name);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$plant_count = $row['plant_count'];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,6 +63,8 @@ include 'includes/session.php';
             text-align: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
+            text-decoration: none; /* Remove underline from link */
+            color: inherit; /* Inherit text color */
         }
 
         .box:hover {
@@ -70,41 +87,21 @@ include 'includes/session.php';
     <?php include 'includes/header.php'; ?>
 
     <div class="container">
-        <?php
-        // Get the username and extract the part before '@'
-        $username = htmlspecialchars($_SESSION['username']);
-        $username_parts = explode('@', $username);
-        $display_name = $username_parts[0]; // Get the first part of the username
-        ?>
-        <h1>Welcome to Your Dashboard, <?php echo $display_name; ?>!</h1>
+        <h1>Welcome to Your Dashboard, <?php echo htmlspecialchars($first_name . ' ' . $last_name); ?>!</h1>
 
         <div class="dashboard">
-            <div class="box">
-                <h2>Profile</h2>
-                <p>View and edit your profile information.</p>
-            </div>
-            <div class="box">
-                <h2>Messages</h2>
-                <p>Check your messages and notifications.</p>
-            </div>
-            <div class="box">
-                <h2>Settings</h2>
-                <p>Manage your account settings.</p>
-            </div>
-            <div class="box">
-                <h2>Reports</h2>
-                <p>View your activity reports.</p>
-            </div>
-            <div class="box">
-                <h2>Support</h2>
-                <p>Get help and support.</p>
-            </div>
-            <div class="box">
-                <h2>Logout</h2>
-                <p>Sign out of your account.</p>
-            </div>
+            <a href="pages/viewlist.php" class="box">
+                <h2>Plants</h2>
+                <p>You have <?php echo $plant_count; ?> plants in your collection.</p>
+            </a>
         </div>
     </div>
 
 </body>
 </html>
+
+<?php
+// Close the statement and connection
+$stmt->close();
+$conn->close();
+?>
