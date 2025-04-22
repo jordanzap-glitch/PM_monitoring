@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Details - Green Eco Monitoring</title>
+    <style>
+        body {
+            background-color: #e0f2e9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .plant-image {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-item {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+            .detail-item strong {
+                color: #333;
+            }
+
+        .back-btn {
+            padding: 12px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: block;
+            width: 120px;
+            margin: 30px auto 0;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+            .back-btn:hover {
+                background-color: #005f8b;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Tree Details</h1>
+        <img id="plantImage" class="plant-image" src="" alt="Plant Image" />
+        <div id="plantDetails">
+            <!-- Plant details will be dynamically inserted here -->
+        </div>
+        <button class="back-btn" onclick="goBack()">Back</button>
+    </div>
+
+    <script>
+        function getPlantIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('plant_id');
+        }
+
+        async function loadPlantDetails() {
+            const plantId = getPlantIdFromUrl();
+            try {
+                const response = await fetch(`get_plant_detail.php?plant_id=${plantId}`);
+                const plant = await response.json();
+
+                // Check if PLANT_PIC exists and set it, or hide the image element if not
+                if (plant.PLANT_PIC) {
+                    document.getElementById('plantImage').src = 'data:image/jpeg;base64,' + plant.PLANT_PIC;
+                } else {
+                    document.getElementById('plantImage').style.display = 'none';
+                }
+
+                const detailsContainer = document.getElementById('plantDetails');
+
+                detailsContainer.innerHTML = `
+                        <div class="detail-item"><strong>Plant ID:</strong> ${plant.SEQ_NUM || ''}</div>
+                        <div class="detail-item"><strong>Plant Name:</strong> ${plant.PLANT_NAME || ''}</div>
+                        <div class="detail-item"><strong>Scientific Name:</strong> ${plant.SCIENTIFIC_NAME || ''}</div>
+                        <div class="detail-item"><strong>Date Added:</strong> ${plant.DATE_ADDED || ''}</div>
+                        <div class="detail-item"><strong>Height:</strong> ${plant.HEIGHT || ''}</div>
+                        <div class="detail-item"><strong>Description:</strong> ${plant.DESCRIPTION || ''}</div>
+                        <div class="detail-item"><strong>Sponsored By:</strong>
+                            ${(plant.SPONSOR_FIRST_NAME || '')} ${(plant.SPONSOR_MIDDLE_NAME || '')} ${(plant.SPONSOR_LAST_NAME || '')}
+                        </div>
+                    `;
+            } catch (error) {
+                console.error('Error fetching plant details:', error);
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'plant_list.html';
+        }
+
+        // Load plant details when the page loads
+        window.onload = loadPlantDetails;
+    </script>
+
+</body>
+
+</html>

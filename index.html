@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Green Eco Monitoring</title>
+    <style>
+        body {
+            background-color: #e0f2e9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+            .container img {
+                max-width: 120px;
+                margin-bottom: 20px;
+            }
+
+            .container h1 {
+                color: #2e7d32;
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+            .input-group input {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 16px;
+            }
+
+                .input-group input:focus {
+                    border-color: #2e7d32;
+                    outline: none;
+                    box-shadow: 0 0 8px rgba(46, 125, 50, 0.3);
+                }
+
+        .btn {
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn:hover {
+                background-color: #1b5e20;
+            }
+
+        .configure-btn {
+            background-color: #388e3c;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <img src="Resources/Logo.png" alt="Logo">
+        <h1>Welcome Back!</h1>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="text" name="username" id="username" placeholder="Username" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" name="password" id="password" placeholder="Password" required>
+            </div>
+
+            <button type="button" class="btn" onclick="login()">Login</button>
+            <button type="button" class="btn configure-btn" onclick="configurePage()">Configure</button>
+        </form>
+    </div>
+
+    <script>
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+                });
+
+                const result = await response.text();
+
+                if (response.ok) {
+                    if (result.includes("successful")) {
+                        alert(result);
+                        window.location.href = 'plant_list.html';
+                    } else {
+                        alert(result);
+                    }
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('An error occurred during login. Please try again.');
+            }
+        }
+
+        function configurePage() {
+            window.location.href = 'Configure_Page.html';
+        }
+    </script>
+
+</body>
+
+</html>

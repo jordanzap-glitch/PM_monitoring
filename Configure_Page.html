@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configure Database Connection</title>
+    <style>
+        body {
+            background-color: #e0f2e9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+            .input-group input {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                font-size: 16px;
+                margin: 8px 0;
+                box-sizing: border-box;
+            }
+
+        .btn {
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+            .btn:hover {
+                background-color: #1b5e20;
+            }
+
+        .back-btn {
+            width: 100%;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+
+            .back-btn:hover {
+                background-color: #005ea6;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Configure Database</h1>
+
+        <!-- Database Configuration Fields -->
+        <form id="configForm">
+            <div class="input-group">
+                <input type="text" name="servername" id="servername" placeholder="Server Name" required>
+            </div>
+            <div class="input-group">
+                <input type="text" name="username" id="username" placeholder="Database Username" required>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" id="password" placeholder="Database Password" required>
+            </div>
+            <div class="input-group">
+                <input type="text" name="dbname" id="dbname" placeholder="Database Name" required>
+            </div>
+
+            <!-- Admin Authentication Fields -->
+            <div class="input-group">
+                <input type="text" name="admin_username" id="admin_username" placeholder="Admin Username" required>
+            </div>
+            <div class="input-group">
+                <input type="password" name="admin_password" id="admin_password" placeholder="Admin Password" required>
+            </div>
+
+            <button type="button" class="btn" onclick="updateConfig()">Update Configuration</button>
+        </form>
+
+        <!-- Back button -->
+        <button type="button" class="back-btn" onclick="goBack()">Back to Home</button>
+    </div>
+
+    <script>
+        async function updateConfig() {
+            const servername = document.getElementById('servername').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const dbname = document.getElementById('dbname').value;
+            const adminUsername = document.getElementById('admin_username').value;
+            const adminPassword = document.getElementById('admin_password').value;
+
+            try {
+                const response = await fetch('Update_db_connection.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `servername=${encodeURIComponent(servername)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&dbname=${encodeURIComponent(dbname)}&admin_username=${encodeURIComponent(adminUsername)}&admin_password=${encodeURIComponent(adminPassword)}`
+                });
+
+                const result = await response.text();
+                alert(result);
+
+                // Redirect to the login page upon successful update
+                if (result.includes("Configuration updated successfully!")) {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Error updating configuration:', error);
+                alert('An error occurred while updating configuration.');
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+
+</html>
