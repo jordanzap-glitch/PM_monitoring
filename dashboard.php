@@ -4,18 +4,30 @@ include 'includes/session.php';
 // Start the session
 
 // Check if the user is logged in
+if (!isset($_SESSION['userFirstName']) || !isset($_SESSION['userLastName'])) {
+    // Redirect to login page or show an error
+    header("Location: login.php");
+    exit();
+}
+
 // Get the user's first name and last name from the session
 $first_name = $_SESSION['userFirstName'];
 $last_name = $_SESSION['userLastName'];
 
-// Query to count the number of plants for the specific user
-$query = "SELECT COUNT(*) as plant_count FROM TBL_PLANT_INFO WHERE SPONSOR_FIRST_NAME = ? AND SPONSOR_LAST_NAME = ?";
+// Query to count the number of alive and dead plants for the specific user
+$query = "
+    SELECT 
+        COUNT(CASE WHEN is_active = 1 THEN 1 END) as alive_count,
+        COUNT(CASE WHEN is_active = 0 THEN 1 END) as dead_count
+    FROM TBL_PLANT_INFO 
+    WHERE SPONSOR_FIRST_NAME = ? AND SPONSOR_LAST_NAME = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("ss", $first_name, $last_name);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
-$plant_count = $row['plant_count'];
+$alive_count = $row['alive_count'];
+$dead_count = $row['dead_count'];
 
 ?>
 <!DOCTYPE html>
@@ -90,9 +102,13 @@ $plant_count = $row['plant_count'];
         <h1>Welcome to Your Dashboard, <?php echo htmlspecialchars($first_name . ' ' . $last_name); ?>!</h1>
 
         <div class="dashboard">
-            <a href="pages/viewlist.php" class="box">
-                <h2>Plants</h2>
-                <p>You have <?php echo $plant_count; ?> plants in your collection.</p>
+            <a href="pages/viewlistalive.php" class="box">
+                <h2>Alive Plants/Trees</h2>
+                <p>You have <?php echo $alive_count; ?> Alive Plants/Trees.</p>
+            </a>
+            <a href="pages/viewlistdead.php" class="box">
+                <h2>Dead Plants/Trees</h2>
+                <p>You have <?php echo $dead_count; ?> Dead Plants/Trees.</p>
             </a>
         </div>
     </div>

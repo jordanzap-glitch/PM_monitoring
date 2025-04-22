@@ -15,8 +15,8 @@ if (!isset($_SESSION['userFirstName']) || !isset($_SESSION['userLastName'])) {
 $first_name = $_SESSION['userFirstName'];
 $last_name = $_SESSION['userLastName'];
 
-// Query to get the plants for the specific user
-$query = "SELECT PLANT_NAME FROM TBL_PLANT_INFO WHERE SPONSOR_FIRST_NAME = ? AND SPONSOR_LAST_NAME = ?";
+// Query to get the dead plants for the specific user, including SEQ_NUM
+$query = "SELECT PLANT_NAME, SEQ_NUM FROM TBL_PLANT_INFO WHERE SPONSOR_FIRST_NAME = ? AND SPONSOR_LAST_NAME = ? AND is_active = 0";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("ss", $first_name, $last_name);
 $stmt->execute();
@@ -25,7 +25,7 @@ $result = $stmt->get_result();
 // Fetch the plant data
 $plants = [];
 while ($row = $result->fetch_assoc()) {
-    $plants[] = $row['PLANT_NAME'];
+    $plants[] = $row; // Store the entire row to access both PLANT_NAME and SEQ_NUM
 }
 
 $stmt->close();
@@ -37,7 +37,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tree List - Green Eco Monitoring</title>
+    <title>Dead Tree List - Green Eco Monitoring</title>
     <style>
         body {
             background-color: #e0f2e9;
@@ -119,15 +119,6 @@ $conn->close();
             background-color: #1b5e20;
         }
 
-        .survival-rate {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            color: #2e7d32;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         .search-container {
             display: flex;
             justify-content: space-between;
@@ -160,12 +151,12 @@ $conn->close();
 </head>
 
 <body>
-<?php include 'includes/header.php'; ?>
+ <?php include 'includes/header.php'; ?>
     <div class="container">
         <div class="header">
-            <h1>List of Trees</h1>
+            <h1>List of Dead Trees</h1>
             <a href="../dashboard.php" class="logout-btn">
-                <img src="../Resources/logout.png" alt="Logout">
+                <img src="../Resources/logout.png " alt="Logout">
             </a>
         </div>
 
@@ -184,16 +175,12 @@ $conn->close();
             <tbody>
                 <?php foreach ($plants as $plant): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($plant); ?></td>
-                    <td><button class="view-btn" onclick="viewPlant('<?php echo htmlspecialchars($plant); ?>')">View</button></td>
+                    <td><?php echo htmlspecialchars($plant['PLANT_NAME']); ?></td>
+                    <td><button class="view-btn" onclick="viewPlant('<?php echo htmlspecialchars($plant['SEQ_NUM']); ?>')">View</button></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-
-        <div class="survival-rate" id="survivalRate">
-            <!-- Survival rate information can be displayed here -->
-        </div>
     </div>
 
     <script>
@@ -206,9 +193,9 @@ $conn->close();
             });
         }
 
-        function viewPlant(plantName) {
-            // Implement the logic to view the plant details
-            alert('Viewing details for: ' + plantName);
+        function viewPlant(seqNum) {
+            // Redirect to plant_detail.html with the SEQ_NUM as a query parameter
+            window.location.href = '../plant_detail.html?plant_id=' + encodeURIComponent(seqNum);
         }
     </script>
 </body>

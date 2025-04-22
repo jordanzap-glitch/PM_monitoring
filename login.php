@@ -1,7 +1,7 @@
 <?php
-// Include the database connection file
+session_start();
 include 'db_connection.php';
-include 'includes/session.php';
+
 // Start the session
 
 // Get POST data

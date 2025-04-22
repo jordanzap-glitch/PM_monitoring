@@ -57,7 +57,7 @@
             <a href="#">Home</a>
             <a href="#">Profile</a>
             <a href="#">Settings</a>
-            <a href="logout.php">Logout</a>
+            <a href="index.html">Logout</a>
         </div>
 
         <!-- Dashboard content goes here -->

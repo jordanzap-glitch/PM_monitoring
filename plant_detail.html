@@ -47,9 +47,9 @@
             font-size: 16px;
         }
 
-            .detail-item strong {
-                color: #333;
-            }
+        .detail-item strong {
+            color: #333;
+        }
 
         .back-btn {
             padding: 12px;
@@ -66,9 +66,9 @@
             transition: background-color 0.3s ease;
         }
 
-            .back-btn:hover {
-                background-color: #005f8b;
-            }
+        .back-btn:hover {
+            background-color: #005f8b;
+        }
     </style>
 </head>
 
@@ -80,7 +80,7 @@
         <div id="plantDetails">
             <!-- Plant details will be dynamically inserted here -->
         </div>
-        <button class="back-btn" onclick="goBack()">Back</button>
+        <button class="back-btn" id="backButton">Back</button>
     </div>
 
     <script>
@@ -120,14 +120,14 @@
             }
         }
 
-        function goBack() {
-            window.location.href = 'plant_list.html';
-        }
-
+  
         // Load plant details when the page loads
         window.onload = loadPlantDetails;
     </script>
-
+        <script>
+            document.getElementById('backButton').addEventListener('click', function() {
+                window.location.href = 'pages/viewlistalive.php';
+            });
+        </script>
 </body>
-
 </html>
