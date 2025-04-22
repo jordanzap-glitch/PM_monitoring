@@ -1,6 +1,9 @@
 <?php
 // Include the database connection file
 include 'db_connection.php';
+include 'includes/session.php';
+// Start the session
+
 
 // Get POST data
 $username = $_POST['username'];
@@ -23,10 +26,13 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
+    
+    // Store the username in the session
+    $_SESSION['username'] = $row['username'];
     if ($row['user_type'] == 'admin') {
         echo "Admin login successful!";
     } else {
-        echo "User login successful!";
+        echo "User  login successful!";
     }
 } else {
     echo "Invalid username or password.";
