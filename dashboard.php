@@ -94,15 +94,15 @@ $conn->close();
     <div class="container mx-auto p-6 bg-white rounded-lg shadow-lg">
         <h1 class="text-center text-2xl text-green-700 mb-6">Welcome to Your Dashboard, <?php echo htmlspecialchars($first_name . ' ' . $last_name); ?>!</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <a href="pages/viewlistalive.php" class="bg-gray-100 border border-gray-300 rounded-lg p-4 text-center shadow hover:shadow-lg transition-transform transform hover:scale-105">
-                <h2 class="text-green-700 text-xl">Alive Plants/Trees</h2>
-                <p class="text-gray-600">You have <?php echo $alive_count; ?> Alive Plants/Trees.</p>
-            </a>
-            <a href="pages/viewlistdead.php" class="bg-gray-100 border border-gray-300 rounded-lg p-4 text-center shadow hover:shadow-lg transition-transform transform hover:scale-105">
-                <h2 class="text-[rgba(255,0,0,1)] text-xl">Dead Plants/Trees</h2>
-                <p class="text-gray-600">You have <?php echo $dead_count; ?> Dead Plants/Trees.</p>
-            </a>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"> 
+            <a href="pages/viewlistalive.php" class="bg-gray-100 border border-gray-300 rounded-lg p-4 text-center shadow hover:shadow-lg transition-transform transform hover:scale-105"> 
+                <h2 class="text-green-700 text-xl">Alive Plants/Trees</h2> 
+                <p class="text-gray-600">You have <?php echo $alive_count; ?> Alive Plants/Trees.</p> 
+            </a> 
+            <a href="pages/viewlistdead.php" class="bg-gray-100 border border-gray-300 rounded-lg p-4 text-center shadow hover:shadow-lg transition -transform transform hover:scale-105"> 
+                <h2 class="text-red-700 text-xl">Dead Plants/Trees</h2> 
+                <p class="text-gray-600">You have <?php echo $dead_count; ?> Dead Plants/Trees.</p> 
+            </a> 
         </div>
         <div class="flex flex-col md:flex-row justify-between">
             <div class="w-full md:w-1/2 mb-6 md:mb-0">
