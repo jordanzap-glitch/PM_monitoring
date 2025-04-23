@@ -99,7 +99,7 @@ $conn->close();
                 <h2 class="text-green-700 text-xl">Alive Plants/Trees</h2>
                 <p class="text-gray-600">You have <?php echo $alive_count; ?> Alive Plants/Trees.</p>
             </a>
-            <a href="pages/viewlistdead.php" class=" bg-gray-100 border border-gray-300 rounded-lg p-4 text-center shadow hover:shadow-lg transition-transform transform hover:scale-105">
+            <a href="pages/viewlistdead.php" class=" bg-gray-100 border border-gray-300 rounded-lg p-4 text-center shadow hover:shadow-lg transition -transform transform hover:scale-105">
                 <h2 class="text-green-700 text-xl">Dead Plants/Trees</h2>
                 <p class="text-gray-600">You have <?php echo $dead_count; ?> Dead Plants/Trees.</p>
             </a>
@@ -123,6 +123,8 @@ $conn->close();
                                         <?php echo htmlspecialchars($plant['PLANT_NAME']); ?>
                                         <?php if ($plant['is_active'] == 1): ?>
                                             <img src="Resources/Green_Arrow_Up.png" alt="Growing Arrow" class="inline-block w-5 h-5 ml-2" />
+                                        <?php else: ?>
+                                            <img src="Resources/deadex.png" alt="Dead Plant" class="inline-block w-5 h-5 ml-2" />
                                         <?php endif; ?>
                                     </td>
                                     <td class="p-2 border-b border-gray-300 text-center"><?php echo htmlspecialchars($plant['SCIENTIFIC_NAME']); ?></td>
