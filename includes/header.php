@@ -13,8 +13,6 @@
     <div class="container mx-auto p-6 bg-white rounded-lg shadow-lg">
         <div class="navbar bg-green-700 p-4 rounded-lg mb-6">
             <a href="#" class="text-white font-bold mx-4 hover:underline">Home</a>
-            <a href="#" class="text-white font-bold mx-4 hover:underline">Profile</a>
-            <a href="#" class="text-white font-bold mx-4 hover:underline">Settings</a>
             <a href="index.html" class="text-white font-bold mx-4 hover:underline">Logout</a>
         </div>
 
